@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 RUN  CFLAGS="-I/usr/src/php" docker-php-ext-install \
         gd mysqli  bz2  pdo pdo_mysql shmop intl exif \
         curl \
-        simplexml soap sockets tidy tokenizer \
+        simplexml soap sockets tidy tokenizer bcmath \
         xml xmlreader  xmlrpc xsl zip
 
 RUN apt-get update && apt-get install -y vim curl wget git && apt-get clean
