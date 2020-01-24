@@ -17,7 +17,8 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev
 
 RUN  CFLAGS="-I/usr/src/php" docker-php-ext-install \
-        gd mysqli  bz2  pdo pdo_mysql shmop intl exif \
+        gd mysqli  bz2 opcache \
+        pdo pdo_mysql shmop intl exif \
         curl \
         simplexml soap sockets tidy tokenizer bcmath \
         xml xmlreader  xmlrpc xsl zip
