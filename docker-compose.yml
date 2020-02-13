@@ -1,4 +1,5 @@
 version: "3"
+
 services:
   nginx:
     build:
@@ -8,10 +9,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/app:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
       - ./app:/var/www/html
       - ./ssl:/etc/nginx/ssl
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     links:
       - app
     # restart: always
@@ -33,9 +35,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "9000:9000"
+      # - "9009:9009"
     volumes:
       - ./app:/var/www/html
-      - ./php.ini://usr/local/etc/php/php.ini
+      - ./php.ini:/usr/local/etc/php/php.ini
 
     environment:
       - app_DB_NAME=db
@@ -44,4 +47,6 @@ services:
       - app_DB_PASSWORD=aqwe123
     links:
       - mysql
+    extra_hosts:
+      - "host.docker.internal:$DOCKER_HOST_IP"
     # restart: always

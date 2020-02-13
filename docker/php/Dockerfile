@@ -1,4 +1,4 @@
-FROM php:7.3-fpm 
+FROM php:7.2-fpm 
 RUN apt update && apt upgrade -y 
 RUN apt-get update && apt-get install -y \
         zip \
@@ -34,6 +34,8 @@ RUN docker-php-ext-configure gd \
 # RUN pecl install imagick
 # RUN pecl install imagick-beta
 RUN pecl install imagick && docker-php-ext-enable imagick
+RUN pecl install xdebug-2.8.1 \
+    && docker-php-ext-enable xdebug 
 
 RUN  CFLAGS="-I/usr/src/php" docker-php-ext-install \
         gd mysqli  bz2 opcache \
@@ -48,3 +50,14 @@ RUN apt-get update && apt-get install -y vim curl wget tmux git && apt-get clean
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
 
+RUN echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "display_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.default_enable=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_connect_back=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_port=9009" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_handler=dbgp" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.extended_info=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.max_nesting_level=9999" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini 
